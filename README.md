@@ -1,18 +1,12 @@
-# ch341-gpio
-Using CH341 as a USB GPIO and custom serial interface playground
+# Using CH341 Mini Programmer as GPIO
 
 QinHeng Electronics devices are everywhere — USB programmers, EEPROM tools, UART adapters, SPI dongles, printer cables, and random low-cost gadgets.
 
-Most people only use the UART mode.
-
-But the CH341 can do much more.
-
-This project shows how to:
+Most people only use the UART mode. But the CH341 can do much more. This project shows how to:
 
 * Use the CH341 as a **general purpose GPIO device**
 * Implement **custom serial protocols** in software
 * Bitbang interfaces like:
-
   * SPI
   * Shift registers
   * ADCs
