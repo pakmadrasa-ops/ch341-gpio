@@ -349,6 +349,138 @@ You can extend this project into:
 
 ---
 
+## CH341 Mini Programmer Jumpers Explained
+
+Many cheap CH341A Mini Programmer boards include jumpers or solder links that change how the CH341 chip operates.
+
+This is important because the same chip can appear as completely different USB devices depending on jumper configuration.
+
+Example from Linux:
+
+### EEPROM / Parallel / I2C Mode
+
+```text
+ID 1a86:5512 QinHeng Electronics CH341 in EPP/MEM/I2C mode
+```
+
+This mode exposes the special GPIO / memory / parallel interface features used in this repository.
+
+This is the mode required for:
+
+* GPIO control
+* Bitbanging
+* EEPROM programming
+* Custom serial interfaces
+* SPI/I2C experiments
+
+---
+
+### UART Serial Mode
+
+```text
+ID 1a86:5523 QinHeng Electronics CH341 in serial mode
+```
+
+This turns the chip into a normal USB-to-UART adapter.
+
+In this mode:
+
+* GPIO features are unavailable
+* UIO stream commands do not work
+* The device behaves like `/dev/ttyUSB0`
+
+---
+
+# Why This Happens
+
+The CH341 supports multiple internal operating modes:
+
+| Mode | Function                      |
+| ---- | ----------------------------- |
+| UART | USB-to-serial converter       |
+| EPP  | Parallel/GPIO style interface |
+| MEM  | EEPROM/flash programming      |
+| I2C  | Serial memory interface       |
+
+Cheap CH341 programmer boards expose configuration jumpers that select which mode is active.
+
+---
+
+# Typical CH341A Programmer Jumpers
+
+Different board revisions vary, but common jumpers include:
+
+| Jumper        | Purpose                          |
+| ------------- | -------------------------------- |
+| 3.3V / 5V     | Target voltage selection         |
+| UART / PROG   | Select serial vs programmer mode |
+
+Some boards use:
+
+* slide switches
+* solder bridges
+* resistor options
+* zero-ohm links
+
+instead of removable jumpers.
+
+---
+
+# Detecting The Active Mode
+
+Linux makes this easy:
+
+```bash
+lsusb
+```
+
+If you see:
+
+```text
+1a86:5512
+```
+
+the device is in programmable GPIO/EPP/I2C mode.
+
+If you see:
+
+```text
+1a86:5523
+```
+
+the device is acting as a UART adapter.
+
+---
+
+# Important For This Repository
+
+This project requires:
+
+```text
+VID:PID = 1A86:5512
+```
+
+because the GPIO and UIO stream commands only work in EPP/MEM/I2C mode.
+
+If your board appears as:
+
+```text
+1A86:5523
+```
+
+you likely need to:
+
+* move a jumper
+* change a switch
+* modify solder bridges
+
+to enable programmer/EPP mode.
+
+---
+
+
+
+
 # Important Notes
 
 ⚠ GPIO functionality differs between CH341 variants.
