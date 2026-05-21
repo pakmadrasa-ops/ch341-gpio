@@ -117,7 +117,7 @@ pip install pyusb
 # Running
 
 ```bash
-python3 ch341_tlc1549.py
+python3 tlc1549.py
 ```
 
 Example output:
